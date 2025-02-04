@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            
+            flex-direction: column;
+            text-align: center;
+        }
+    .bar {
+        display: flex;
+        position: fixed;
+        align-items: center;
+        justify-content: space-between;
+        border: 10px;
+        
+        background-color: #fff;
+        width: 100%;
+        padding: 15px 20px;
+        z-index: 10;
+    }
+
+    .logo {
+        
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .search-container {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        justify-content: center;
+    }
+
+    form {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .input input {
+        width: 250px;
+        padding: 10px;
+        border: 2px solid  #ff7b00;
+        border-radius: 5px;
+        outline: none;
+    }
+
+    .button button, .login button {
+        padding: 10px 15px;
+        margin-right: 40px;
+        border: none;
+        background-color: #ff7b00;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .button button:hover, .login button:hover {
+        background-color: #c24904;
+    }
+
+    .login {
+        margin-left: auto;
+    }
+
+
+        #product-container {
+            display: flex;
+            flex-wrap: wrap;
+            
+            justify-content: center;
+            gap: 20px;
+            margin-top: 100px;
+        }
+
+        .product {
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            width: 250px;
+            align-content: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .product:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .product img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .product h2 {
+            font-size: 1.2em;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .product p {
+            color: #ff7300;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body><div class="bar">
+    <div class="logo"><img src="C:\Users\aaz0049\Documents\belajar javascrip\Sekolah\1.png" alt="" srcset="" width="100px"></div>
+    <div class="search-container">
+        <form id="form">
+            <div class="input">
+                <input type="text" id="input" placeholder="Cari sesuatu..." autocomplete="off">
+            </div>
+            <div class="button"><button type="submit">Cari</button></div>
+        </form>
+    </div>
+    <div class="login"><button>Masuk</button></div>
+</div>
+
+    <div id="product-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            axios.get('http://localhost:6001')
+                .then(function (response) {
+                    const products = Array.isArray(response.data) ? response.data : [response.data];
+                    const container = document.getElementById('product-container');
+                    products.forEach(product => {
+                        const productDiv = document.createElement('div');
+                        productDiv.className = 'product';
+                        productDiv.innerHTML = `
+                            <img src="http://localhost:6001/uploads/${product.img}" alt="${product.name}" />
+                            <h2>${product.name}</h2>
+                            <p>Rp ${product.harga}</p>
+                        `;
+                        container.appendChild(productDiv);
+                    });
+                })
+                .catch(function (error) {
+                    console.error('Error fetching products:', error);
+                });
+        });
+    
+        document.getElementById('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const input = document.getElementById('input').value;
+            axios.post('http://localhost:6001/search', { name: input })
+                .then(function (response) {
+                    const products = Array.isArray(response.data) ? response.data : [response.data];
+                    const container = document.getElementById('product-container');
+                    container.innerHTML = ''; 
+                    products.forEach(product => {
+                        const productDiv = document.createElement('div');
+                        productDiv.className = 'product';
+                        productDiv.innerHTML = `
+                            <img src="http://localhost:6001/uploads/${product.img}" alt="${product.name}" />
+                            <h2>${product.name}</h2>
+                            <p>Rp ${product.harga}</p>
+                        `;
+                        container.appendChild(productDiv);
+                    });
+                })
+                .catch(function (error) {
+                    console.error('Error searching products:', error);
+                });
+        });
+    </script>
+</body>
+</html>
