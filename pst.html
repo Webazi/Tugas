@@ -14,7 +14,7 @@
         <h2 class="text-2xl font-semibold mb-4 text-center">Upload Product</h2>
 
         <label for="name" class="block font-medium">Name:</label>
-        <input type="text" id="name" name="name" required class="w-full p-2 border rounded mb-4 focus:ring focus:ring-blue-300">
+        <input type="text" id="name" name="name" autocomplete="off" required class="w-full p-2 border rounded mb-4 focus:ring focus:ring-blue-300">
 
         <label for="harga" class="block font-medium">Harga:</label>
         <input type="number" id="harga" name="harga" required class="w-full p-2 border rounded mb-4 focus:ring focus:ring-blue-300">
@@ -42,7 +42,11 @@
                         timer: 2000,
                         showConfirmButton: false
                     });
+                }).then(() => {
                     form.reset();
+                    setTimeout(() => {
+                        window.history.back();
+                    }, 2000);
                 })
                 .catch(function (error) {
                     Swal.fire({
