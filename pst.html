@@ -33,7 +33,7 @@
             const form = event.target;
             const formData = new FormData(form);
 
-            axios.post('http://localhost:6001/post', formData)
+            axios.post('https://tugassekolah-production.up.railway.app/post', formData)
                 .then(function (response) {
                     Swal.fire({
                         icon: 'success',
@@ -57,6 +57,8 @@
                     console.error('Error adding product:', error);
                 });
         });
+
+        
     </script>
 
 </body>
